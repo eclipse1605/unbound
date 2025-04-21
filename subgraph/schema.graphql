@@ -1,0 +1,65 @@
+type Spark @entity(immutable: false) {
+  id: ID!
+  author: User!
+  content: String!
+  mediaHash: String
+  timestamp: BigInt!
+  likes: Int!
+  rebounds: Int!
+  isDeleted: Boolean!
+  reboundsList: [Rebound!]! @derivedFrom(field: "originalSpark")
+  comments: [Comment!]! @derivedFrom(field: "spark")
+  interactions: [Interaction!]! @derivedFrom(field: "spark")
+}
+
+type Rebound @entity(immutable: true) {
+  id: ID!
+  originalSpark: Spark!
+  rebounder: User!
+  comment: String
+  timestamp: BigInt!
+}
+
+type User @entity(immutable: false) {
+  id: ID!
+  sparks: [Spark!]! @derivedFrom(field: "author")
+  rebounds: [Rebound!]! @derivedFrom(field: "rebounder")
+  uploadedMedia: [Media!]! @derivedFrom(field: "uploader")
+  orbits: [User!]!  # Users this user is orbiting
+  orbiters: [User!]! # Users orbiting this user
+  comments: [Comment!]! @derivedFrom(field: "author")
+  interactions: [Interaction!]! @derivedFrom(field: "user")
+}
+
+type Media @entity(immutable: false) {
+  id: ID!
+  ipfsHash: String!
+  uploader: User!
+  contentType: String!
+  timestamp: BigInt!
+  isActive: Boolean!
+}
+
+type Comment @entity(immutable: true) {
+  id: ID!
+  spark: Spark!
+  author: User!
+  content: String!
+  timestamp: BigInt!
+}
+
+enum InteractionType {
+  LIKE
+  COMMENT
+  REBOUND
+  UNKNOWN
+}
+
+type Interaction @entity(immutable: true) {
+  id: ID!
+  spark: Spark!
+  user: User!
+  timestamp: BigInt!
+  type: InteractionType!
+  content: String
+}

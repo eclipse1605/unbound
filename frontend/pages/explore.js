@@ -3,28 +3,25 @@ import Layout from '../components/layout';
 const Explore = () => {
     return (
         <Layout>
-            <div className="flex items-center ">
-                <img src="/images/explore.png" alt="Home" className="w-14 h-14" />
-                <span className="font-bold text-lg">Explore</span>
+            <div className="flex items-center">
+                <img src="/images/explore.png" alt="Explore" className="w-14 h-14" />
+                <span className="font-bold text-lg text-white">Explore</span>
             </div>
-            <div className="mt-4 space-y-6">
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Trending Topics</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li>#HiGuys</li>
-                        <li>#Unbound</li>
-                        <li>#SEProject</li>
-                    </ul>
+            
+            <div className="mt-6 p-6 bg-[#2A2A2A] rounded-lg border border-[#3a3a3a]">
+                <div className="flex items-center mb-4">
+                    <svg xmlns="http:
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 className="text-xl font-bold text-white">The Graph Integration Disabled</h2>
                 </div>
-
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Discover New Creators</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li>@UserA</li>
-                        <li>@UserB</li>
-                        <li>@UserC</li>
-                    </ul>
-                </div>
+                <p className="text-gray-300 mb-4">
+                    The Explore page requires The Graph indexing service, which is currently disabled in this deployment.
+                    This page will be fully functional once The Graph integration is enabled.
+                </p>
+                <p className="text-gray-400 text-sm">
+                    Try using the Home page or Profile page which use direct blockchain calls for core functionality.
+                </p>
             </div>
         </Layout>
     );

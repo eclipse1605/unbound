@@ -1,0 +1,131 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: SparkRegistry
+    network: sepolia
+    source:
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+      abi: SparkRegistry
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/spark-registry.ts
+      entities:
+        - Spark
+        - Rebound
+        - User
+      abis:
+        - name: SparkRegistry
+          file: ../artifacts/contracts/SparkRegistry.sol/SparkRegistry.json
+      eventHandlers:
+        - event: SparkCreated(indexed uint256,indexed address,string,string)
+          handler: handleSparkCreated
+        - event: SparkDeleted(indexed uint256,indexed address)
+          handler: handleSparkDeleted
+        - event: SparkLiked(indexed uint256,indexed address)
+          handler: handleSparkLiked
+        - event: SparkUnliked(indexed uint256,indexed address)
+          handler: handleSparkUnliked
+          
+  - kind: ethereum/contract
+    name: ReboundManager
+    network: sepolia
+    source:
+      address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      abi: ReboundManager
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/rebound-manager.ts
+      entities:
+        - Spark
+        - Rebound
+        - User
+      abis:
+        - name: ReboundManager
+          file: ../artifacts/contracts/ReboundManager.sol/ReboundManager.json
+      eventHandlers:
+        - event: SparkRebounded(indexed uint256,indexed uint256,indexed address,string)
+          handler: handleSparkRebounded
+
+  - kind: ethereum/contract
+    name: MediaManager
+    network: sepolia
+    source:
+      address: "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+      abi: MediaManager
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/media-manager.ts
+      entities:
+        - Media
+        - User
+      abis:
+        - name: MediaManager
+          file: ../artifacts/contracts/MediaManager.sol/MediaManager.json
+      eventHandlers:
+        - event: MediaRegistered(string,indexed address,string)
+          handler: handleMediaRegistered
+        - event: MediaDeactivated(string,indexed address)
+          handler: handleMediaDeactivated
+          
+  - kind: ethereum/contract
+    name: SocialGraph
+    network: sepolia
+    source:
+      address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+      abi: SocialGraph
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/social-graph.ts
+      entities:
+        - User
+      abis:
+        - name: SocialGraph
+          file: ../artifacts/contracts/SocialGraph.sol/SocialGraph.json
+      eventHandlers:
+        - event: UserOrbited(indexed address,indexed address)
+          handler: handleUserStartedOrbiting
+        - event: UserUnorbited(indexed address,indexed address)
+          handler: handleUserStoppedOrbiting
+          
+  - kind: ethereum/contract
+    name: InteractionTracker
+    network: sepolia
+    source:
+      address: "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+      abi: InteractionTracker
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/interaction-tracker.ts
+      entities:
+        - Spark
+        - User
+        - Comment
+      abis:
+        - name: InteractionTracker
+          file: ../artifacts/contracts/InteractionTracker.sol/InteractionTracker.json
+      eventHandlers:
+        - event: InteractionCreated(indexed uint256,indexed address,uint8,string)
+          handler: handleInteractionCreated
+        - event: CommentCreated(indexed uint256,indexed uint256,indexed address,string,uint256)
+          handler: handleCommentCreated
+        - event: SparkLiked(indexed uint256,indexed address)
+          handler: handleSparkLiked
+        - event: SparkUnliked(indexed uint256,indexed address)
+          handler: handleSparkUnliked

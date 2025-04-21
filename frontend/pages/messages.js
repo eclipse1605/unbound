@@ -3,33 +3,25 @@ import Layout from '../components/layout';
 const Messages = () => {
     return (
         <Layout>
-            <div className="flex items-center ">
-                <img src="/images/messages.png" alt="Home" className="w-14 h-14" />
-                <span className="font-bold text-lg">Messages</span>
+            <div className="flex items-center">
+                <img src="/images/messages.png" alt="Messages" className="w-14 h-14" />
+                <span className="font-bold text-lg text-white">Messages</span>
             </div>
-            <div className="mt-4 space-y-6">
-                {/* Recent Conversations */}
-                <div className="p-4 bg-background rounded shadow">
-                    <h2 className="font-bold">Recent Conversations</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li>📩 @User3: "Hey, how are you?"</li>
-                        <li>📩 @User4: "Check out this cool article!"</li>
-                        <li>📩 @User5: "Want to collaborate on a project?"</li>
-                    </ul>
+            
+            <div className="mt-6 p-6 bg-[#2A2A2A] rounded-lg border border-[#3a3a3a]">
+                <div className="flex items-center mb-4">
+                    <svg xmlns="http:
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 className="text-xl font-bold text-white">The Graph Integration Disabled</h2>
                 </div>
-
-                {/* New Message Section */}
-                <div className="p-4 bg-background rounded shadow">
-                    <h2 className="font-bold">Start a New Conversation</h2>
-                    <input
-                        type="text"
-                        placeholder="Search for users..."
-                        className="w-full bg-[#333] text-white p-2 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    />
-                    <button className="w-full bg-primary text-white py-2 rounded-md mt-2">
-                        New Message
-                    </button>
-                </div>
+                <p className="text-gray-300 mb-4">
+                    The Messages feature requires The Graph indexing service, which is currently disabled in this deployment.
+                    This page will be fully functional once The Graph integration is enabled.
+                </p>
+                <p className="text-gray-400 text-sm">
+                    Try using the Home page or Profile page which use direct blockchain calls for core functionality.
+                </p>
             </div>
         </Layout>
     );

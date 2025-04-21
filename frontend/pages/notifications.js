@@ -3,28 +3,25 @@ import Layout from '../components/layout';
 const Notifications = () => {
     return (
         <Layout>
-            <div className="flex items-center ">
-                <img src="/images/notifications.png" alt="Home" className="w-14 h-14" />
-                <span className="font-bold text-lg">Notifications</span>
+            <div className="flex items-center">
+                <img src="/images/notifications.png" alt="Notifications" className="w-14 h-14" />
+                <span className="font-bold text-lg text-white">Notifications</span>
             </div>
-            <div className="mt-4 space-y-6">
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Recent Activity</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li> @User1 liked your post.</li>
-                        <li> @User2 commented: "This is amazing!"</li>
-                        <li> @User3 started following you.</li>
-                        <li> @User4 retweeted your post.</li>
-                    </ul>
+            
+            <div className="mt-6 p-6 bg-[#2A2A2A] rounded-lg border border-[#3a3a3a]">
+                <div className="flex items-center mb-4">
+                    <svg xmlns="http:
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 className="text-xl font-bold text-white">The Graph Integration Disabled</h2>
                 </div>
-
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Suggested for You</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li> @UserA just joined Unbound.</li>
-                        <li> @UserB posted a viral thread.</li>
-                    </ul>
-                </div>
+                <p className="text-gray-300 mb-4">
+                    Notifications require The Graph indexing service, which is currently disabled in this deployment.
+                    This page will be fully functional once The Graph integration is enabled.
+                </p>
+                <p className="text-gray-400 text-sm">
+                    The application is currently using direct blockchain calls for core functionality instead of indexed data.
+                </p>
             </div>
         </Layout>
     );

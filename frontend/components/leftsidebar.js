@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import TweetModal from './tweetmodal';
+import SparkModal from './SparkModal';
 
 const LeftSidebar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [isTweetModalOpen, setIsTweetModalOpen] = useState(false);
+  const [isSparkModalOpen, setIsSparkModalOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -71,7 +71,7 @@ const LeftSidebar = () => {
 
         {!isSmallScreen && (
           <button
-            onClick={() => setIsTweetModalOpen(true)}
+            onClick={() => setIsSparkModalOpen(true)}
             className="w-full bg-primary text-white py-2 rounded-md mt-2 hover:bg-[#5a3a6f] transition"
           >
             Spark
@@ -79,7 +79,7 @@ const LeftSidebar = () => {
         )}
       </aside>
 
-      <TweetModal isOpen={isTweetModalOpen} onClose={() => setIsTweetModalOpen(false)} />
+      <SparkModal isOpen={isSparkModalOpen} onClose={() => setIsSparkModalOpen(false)} />
     </>
   );
 };

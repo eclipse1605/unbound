@@ -1,0 +1,395 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{graphicx} 
+\usepackage{fancyhdr} 
+\usepackage{titlesec}  
+\usepackage{enumitem} 
+\usepackage{amsmath, amsfonts, amssymb}
+
+\hypersetup{
+    hidelinks=true, 
+    bookmarks=true, 
+    bookmarksopen=true,  
+    pdfauthor={Advay Bhagwat, Akshita Sure, Apoorva Yadav}
+}
+
+\pagestyle{fancy} 
+\fancyhf{}  
+\fancyfoot[R]{\emph{Software Requirement Specification for Unbound}}
+\fancyhead[R]{Page \thepage}
+\fancyhead[L]{\nouppercase{\leftmark}}
+
+\renewcommand{\sectionmark}[1]{\markboth{\thesection\quad#1}{}}
+
+\newcommand{\toctarget}{\hypertarget{toc}{}}
+\newcommand{\sectoclink}{\hyperlink{toc}{\thesection}}
+\newcommand{\subsectoclink}{\hyperlink{toc}{\thesubsection}}
+\newcommand{\subsubsectoclink}{\hyperlink{toc}{\thesubsubsection}}
+
+
+\titleformat{\section}           
+  {\normalfont\Large\bfseries}   
+  {\sectoclink}                  
+  {1em}                          
+  {}                             
+  []           
+  
+\titleformat{\subsection}        
+  {\normalfont\large\bfseries}
+  {\subsectoclink}
+  {1em}
+  {}
+  []
+
+\titleformat{\subsubsection}        
+  {\normalfont\normalsize\bfseries}
+  {\subsubsectoclink}
+  {1em}
+  {}
+  []
+
+\begin{document}
+
+\begin{titlepage}
+    \thispagestyle{empty} 
+    
+    \centering
+    \vspace*{\fill}
+    
+    {\Huge \bfseries Unbound}\\[1cm]
+    {\LARGE Software Requirements Specification}\\[2cm]
+    \large \bfseries
+    \begin{tabular}{l l}
+        Advay Bhagwat  & (2023BCS074) \\
+        Akshita Sure   & (2023BCS065) \\
+        Apoorva Yadav  & (2023BCS076) \\
+    \end{tabular}    
+        \vspace*{\fill}
+\end{titlepage}
+
+\newpage
+\thispagestyle{plain}
+
+\toctarget
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+\subsection{Purpose}
+Unbound is a decentralized, Web3-enabled microblogging platform inspired by Twitter. It allows users to broadcast concise messages, referred to as Sparks and facilitates the redistribution of these messages via the Rebound functionality. Additionally, users can subscribe to content updates from other users using the orbit feature. In addition to these primary operations, the platform includes comprehensive user profiles, hashtags, notifications, media-sharing capabilities, and customizable settings for both appearance and privacy.
+
+\subsection{Scope}
+Unbound is built on blockchain and decentralized protocols, offering a novel alternative to recular social media. The main feature objectives include:
+
+\begin{enumerate}
+    \item \textbf{Decentralized Identity and Authentication:}
+         Blockchain-based identity verification and integration with MetaMask, support for DIDs assuring user autonomy.
+    
+    \item \textbf{Content Creation and Distribution:}
+         Broadcasting short messages ("Sparks") and redistributing content through the "Rebound" feature.
+    
+    \item \textbf{Subscription and Engagement:}
+         The "Orbit" function helps users to subscribe to content updates from preferred profiles,
+        personalized feeds for community interaction.
+    
+    \item \textbf{Enhanced User Profiles and Social Tools:}
+         User profiles with customizable settings and privacy controls. Hashtag support to improve content discoverability.
+    
+    \item \textbf{Data Integrity and Interoperability:}
+         Use of IPFS for decentralized media storage and The Graph for efficient data indexing and retrieval.
+    
+    \item \textbf{Community Governance:}
+         DAO-based governance for community-driven decision-making and platform evolution.
+\end{enumerate}
+
+\section{Overall Description}
+
+\subsection{Product Perspective}
+
+Unbound is built on Ethereum, with a secure environment for creating and redistributing content. It operates as an independent product, utilizing Solidity smart contracts for user authentication, content management, and DAO-based governance. Unbound uses MetaMask for wallet-based authentication, IPFS for decentralized media storage, and The Graph Protocol for data indexing. 
+
+\subsection{Product Functions}
+\begin{itemize}
+    \item User registration and wallet-based authentication via MetaMask.
+    \item Profile creation and editing (username, bio, profile picture, privacy settings).
+    \item Account recovery and security management.
+    \item Creating and publishing short posts (Sparks) with optional media attachments.
+    \item Editing and deleting Sparks (subject to blockchain immutability constraints).
+    \item Archiving and organizing historical Sparks.
+    \item Rebounding (reposting) existing Sparks.
+    \item Liking and commenting on Sparks.
+    \item Utilizing hashtags and mentions for content categorization and user tagging.
+    \item Following other users (Orbit) to curate personalized feeds.
+    \item Content search and discovery by topics, hashtags, and trending subjects.
+    \item Personalized feed generation based on user interactions.
+    \item Real-time notifications for likes, comments, rebounds, and follows.
+    \item Direct messaging for private user interactions.
+    \item Recording interactions on Ethereum-compatible smart contracts.
+    \item Utilizing IPFS/Pinata for decentralized storage of media and content.
+    \item Indexing data via The Graph Protocol for efficient content retrieval.
+    \item Community-driven content moderation and dispute resolution.
+    \item Reporting and flagging inappropriate content.
+    \item DAO-based governance for platform updates and policy decisions.
+\end{itemize}
+
+\subsection{User Classes and Characteristics}
+
+\begin{itemize}
+    \item \textbf{Regular Users:} End-users who utilize the platform for content consumption and basic interaction. They require a highly responsive, low-latency interface with essential CRUD operations for posting, liking, commenting, and following, optimized for minimal cognitive overhead.
+    \item \textbf{Content Creators:} Users engaged in frequent content generation who demand advanced features such as enhanced profile management, content curation tools, and support for media formats. They require content management interfaces that integrate seamlessly with decentralized storage solutions.
+    \item \textbf{Governance Participants:} Token holders and stakeholders who participate in on-chain governance via DAO mechanisms. Their requirements include secure access to smart contract-based voting systems and detailed audit trails for policy updates, ensuring transparency and traceability in decision-making processes.
+    \item \textbf{Developers/Integrators:} Technical users responsible for extending platform functionality or integrating external systems. They interact with RESTful and GraphQL APIs, require comprehensive documentation, and leverage SDKs for rapid development of custom modules or third-party integrations.
+\end{itemize}
+
+\subsection{Operating Environment}
+
+Unbound is deployed as a web-based application operating across multiple client environments. It is optimized for modern web browsers on desktop (Windows, macOS, Linux) and mobile platforms (Android, iOS).
+
+
+\subsection{Design and Implementation Constraints}
+
+\begin{itemize}
+    \item \textbf{Regulatory Compliance:} The software must adhere to all relevant data protection regulations and corporate security policies.
+    \item \textbf{Hardware and Performance:} The application must achieve low-latency responses and optimal memory usage across supported desktop and mobile platforms.
+    \item \textbf{External Interfaces:} Integration with external systems such as smart contracts, decentralized storage, and data indexing services requires conformity to specific data formats and communication protocols.
+    \item \textbf{Technology Stack:} Development is constrained to the established technology stack to ensure compatibility, maintainability, and streamlined integration.
+    \item \textbf{Concurrency and Parallel Operations:} The system must handle concurrent user interactions and transactions while mitigating race conditions and ensuring data consistency.
+    \item \textbf{Coding Standards and Security Practices:} All development must follow industry-standard coding conventions and secure coding practices, including regular security audits.
+\end{itemize}
+
+\subsection{Assumptions and Dependencies}
+
+\begin{itemize}
+    \item \textbf{MetaMask:} Assumes MetaMask will remain available and stable for user authentication and transaction signing, with users having it properly installed and configured.
+    \item \textbf{Pinata:} Depends on Pinata for reliable hosting and serving of content on IPFS, with the assumption that its API and service performance will be consistent.
+    \item \textbf{The Graph Protocol:} Assumes that The Graph Protocol will continue to provide accurate and efficient on-chain data indexing without significant changes to its API.
+    \item \textbf{Hardhat:} Relies on Hardhat for smart contract development, testing, and deployment, assuming it will support all required development workflows.
+    \item \textbf{Next.js and Tailwind CSS:} Assumes the frontend built with Next.js and styled with Tailwind CSS will operate seamlessly on deployment platforms such as Vercel or equivalent self-hosted solutions.
+\end{itemize}
+
+\section{External Interface Requirements}
+
+\subsection{User Interfaces}
+Unbound’s user interface is a web-based application built with Next.js and styled using Tailwind CSS. The design follows a consistent and modern style guide that includes:
+\begin{itemize}
+    \item A responsive layout optimized for desktops, tablets, and smartphones.
+    \item A persistent navigation bar featuring key functions such as Home, Notifications, Profile, and Search.
+    \item Standardized elements including buttons (e.g., “Post”, “Rebound”), tooltips, and error message displays.
+    \item Consistent keyboard shortcuts for navigation and actions, as defined in the separate user interface specification.
+    \item Context-sensitive help and clear, concise error messages to guide users through corrective actions.
+\end{itemize}
+
+\subsection{Hardware Interfaces}
+As a web-based application, Unbound is designed to operate on general-purpose computing devices without specialized hardware. Key hardware interface characteristics include:
+\begin{itemize}
+    \item Compatibility with modern web browsers on devices running Windows, macOS, Linux, Android, and iOS.
+    \item Utilization of standard input/output devices such as keyboards, mice, touchscreens, and cameras (for media capture during content creation).
+    \item Reliance on standard communication protocols (HTTP/HTTPS) for data exchange between the client and server environments.
+\end{itemize}
+
+\subsection{Software Interfaces}
+Unbound integrates with several external software components to deliver its functionality. Specific software interfaces include:
+\begin{itemize}
+    \item \textbf{Authentication and Wallet Integration:} Integration with MetaMask for secure wallet-based user authentication and transaction signing.
+    \item \textbf{Decentralized Storage:} Use of Pinata to interface with IPFS for storing and retrieving media files.
+    \item \textbf{Data Indexing:} Connection with The Graph Protocol via GraphQL endpoints for efficient indexing and querying of on-chain data.
+    \item \textbf{Smart Contract Interaction:} Communication with deployed smart contracts for content publication and governance, utilizing standard JSON-RPC protocols.
+    \item \textbf{Frontend Framework:} The Next.js framework and associated libraries manage client-side rendering, while Tailwind CSS standardizes the visual presentation.
+\end{itemize}
+
+\subsection{Communications Interfaces}
+Unbound relies on a set of defined communication protocols and standards to ensure secure and efficient data transfer:
+\begin{itemize}
+    \item \textbf{Web Protocols:} All data exchanges occur over HTTPS to ensure encrypted communication between the client and server.
+    \item \textbf{API Communication:} RESTful API endpoints and GraphQL queries are used for data interactions, with JSON as the data interchange format.
+    \item \textbf{Real-Time Updates:} WebSocket protocols facilitate real-time notifications and live data updates.
+    \item \textbf{File Transfer:} The IPFS protocol, accessed via Pinata, governs the decentralized storage and retrieval of user-generated media.
+    \item \textbf{Security:} TLS is employed across all communication channels to maintain data integrity and confidentiality.
+\end{itemize}
+
+\section{System Features}
+
+\subsection{User Registration and Authentication}
+\subsubsection{Description and Priority}
+This feature provides a mechanism for new users to register and for existing users to log in using MetaMask. It is considered a \textbf{High} priority since secure and reliable user authentication is fundamental to the platform's operation.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user navigates to the registration or login page and initiates the process.
+    \item \textbf{Response:} The system displays a wallet integration prompt via MetaMask.
+    \item \textbf{Stimulus:} The user confirms the wallet connection.
+    \item \textbf{Response:} The system validates the wallet signature, creates a new user profile (for registration) or logs the user in (for authentication), and confirms the successful operation.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-1:} The system shall allow new users to register using blockchain wallet integration.
+    \item \textbf{REQ-2:} The system shall validate wallet signatures to confirm the authenticity of user registrations.
+    \item \textbf{REQ-3:} The system shall display error messages for failed wallet connections or invalid inputs.
+    \item \textbf{REQ-4:} The system shall securely store user profile data and associated blockchain addresses.
+\end{itemize}
+
+\subsection{Content Creation and Publishing}
+\subsubsection{Description and Priority}
+This feature enables users to create and publish short posts, called \textit{Sparks}, with optional media attachments. It is a \textbf{High} priority as it forms the user-generated content on the platform.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user selects the "Create Spark" option.
+    \item \textbf{Response:} The system presents a content editor interface.
+    \item \textbf{Stimulus:} The user inputs text and optionally attaches media, then submits the Spark.
+    \item \textbf{Response:} The system validates the input, records the Spark via a smart contract and publishes it on the platform.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-5:} The system shall allow users to compose and publish Sparks.
+    \item \textbf{REQ-6:} The system shall support media attachments for Sparks.
+    \item \textbf{REQ-7:} The system shall validate content before publishing and display appropriate error messages for invalid inputs.
+    \item \textbf{REQ-8:} The system shall record the Spark on the blockchain for immutability.
+\end{itemize}
+
+\subsection{Content Interaction}
+\subsubsection{Description and Priority}
+This feature enables users to interact with Sparks by Rebounding (reposting), liking, and commenting. It is considered a \textbf{High} priority as it drives user engagement on the platform.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user clicks on the "Rebound" button of a Spark.
+    \item \textbf{Response:} The system prompts the user to confirm the action and, if confirmed, processes the repost.
+    \item \textbf{Stimulus:} A user clicks the "Like" or "Comment" button.
+    \item \textbf{Response:} The system records the interaction and updates Spark's engagement metrics.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-9:} The system shall allow users to rebound Sparks.
+    \item \textbf{REQ-10:} The system shall enable users to like and comment on Sparks.
+    \item \textbf{REQ-11:} The system shall update and display engagement metrics in real time.
+    \item \textbf{REQ-12:} The system shall handle error conditions, such as duplicate interactions or network issues, with appropriate notifications.
+\end{itemize}
+
+\subsection{User Following and Feed Generation}
+\subsubsection{Description and Priority}
+This feature allows users to follow other users (using the \textit{Orbit} function) and generates personalized feeds based on user interactions. It is a \textbf{Medium} priority, enhancing content discovery and social engagement.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user selects the "Orbit" option on another user's profile.
+    \item \textbf{Response:} The system registers the following action and updates the user’s feed accordingly.
+    \item \textbf{Stimulus:} The user accesses their personalized feed.
+    \item \textbf{Response:} The system retrieves and displays Sparks from followed users and trending content.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-13:} The system shall enable users to follow and unfollow other users using the Orbit function.
+    \item \textbf{REQ-14:} The system shall generate a personalized feed based on the users' follow relationships and interactions.
+    \item \textbf{REQ-15:} The system shall provide real-time updates to the personalized feed.
+\end{itemize}
+
+\subsection{Notifications and Messaging}
+\subsubsection{Description and Priority}
+This feature provides real-time notifications for user interactions (likes, comments, rebounds, follows) and supports direct messaging for private communication. It is a \textbf{Medium} priority for maintaining user engagement.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user receives a like, comment, or rebound on their Spark.
+    \item \textbf{Response:} The system sends a real-time notification to the user.
+    \item \textbf{Stimulus:} A user initiates a direct message conversation.
+    \item \textbf{Response:} The system establishes a secure messaging channel for private communication.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-16:} The system shall provide real-time notifications for all key user interactions.
+    \item \textbf{REQ-17:} The system shall support direct messaging between users.
+    \item \textbf{REQ-18:} The system shall secure all messaging channels using appropriate encryption.
+\end{itemize}
+
+\subsection{Storage and Data Indexing}
+\subsubsection{Description and Priority}
+This feature manages the integration with IPFS/Pinata for media content and employs The Graph Protocol for efficient data indexing. It is a \textbf{High} priority to ensure content persistence and fast retrieval.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user attaches media to a Spark.
+    \item \textbf{Response:} The system uploads the media to IPFS/Pinata and stores the reference on the blockchain.
+    \item \textbf{Stimulus:} The system indexes new content.
+    \item \textbf{Response:} The Graph Protocol updates the indexed data to facilitate fast queries.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-19:} The system shall support media uploads through IPFS/Pinata.
+    \item \textbf{REQ-20:} The system shall store references to media files on the blockchain.
+    \item \textbf{REQ-21:} The system shall index content using The Graph Protocol for efficient querying.
+\end{itemize}
+
+\subsection{Governance and Moderation}
+\subsubsection{Description and Priority}
+This feature provides community-driven governance and content moderation mechanisms. It is a \textbf{Medium} priority, ensuring that the platform maintains a healthy and respectful environment.
+
+\subsubsection{Stimulus/Response Sequences}
+\begin{itemize}
+    \item \textbf{Stimulus:} A user flags a Spark as inappropriate.
+    \item \textbf{Response:} The system logs the report and notifies designated moderators.
+    \item \textbf{Stimulus:} A community vote is initiated regarding a policy update.
+    \item \textbf{Response:} The system records votes and updates policies based on DAO governance rules.
+\end{itemize}
+
+\subsubsection{Functional Requirements}
+\begin{itemize}
+    \item \textbf{REQ-22:} The system shall allow users to report inappropriate content.
+    \item \textbf{REQ-23:} The system shall enable moderators to review and resolve reported content.
+    \item \textbf{REQ-24:} The system shall support DAO-based governance for policy updates and platform decisions.
+\end{itemize}
+
+\section{Other Nonfunctional Requirements}
+
+\subsection{Performance Requirements}
+\begin{itemize}
+    \item The application shall render the initial view within 2 seconds on standard broadband connections.
+    \item Real-time notifications via WebSocket must be delivered within 500 milliseconds of event occurrence.
+    \item API endpoints (REST/GraphQL) are expected to respond within 1 second under normal load conditions.
+    \item The system must handle a minimum of 10,000 concurrent users with no degradation in performance.
+\end{itemize}
+
+\subsection{Safety Requirements}
+\begin{itemize}
+    \item The platform must prevent unauthorized actions that could lead to data loss or corruption.
+    \item Mechanisms shall be in place to safely roll back transactions in case of a smart contract failure.
+    \item Regular audits and automated tests must be performed to ensure that user data is not compromised.
+    \item The system must adhere to relevant data protection regulations, such as GDPR.
+\end{itemize}
+
+\subsection{Security Requirements}
+\begin{itemize}
+    \item All communications between the client and servers must occur over HTTPS with TLS encryption.
+    \item User authentication shall be conducted via MetaMask. 
+    \item Smart contract interactions must be audited and follow best practices to prevent vulnerabilities.
+    \item Sensitive data stored on IPFS via Pinata must be encrypted and access controlled.
+    \item Access control mechanisms must enforce role-based permissions for content creation, moderation, and governance.
+\end{itemize}
+
+\subsection{Software Quality Attributes}
+Unbound is expected to achieve high standards in multiple quality dimensions:
+\begin{itemize}
+    \item \textbf{Adaptability:} The architecture must support modifications and upgrades with minimal impact on existing functionality.
+    \item \textbf{Availability:} The system must maintain a high uptime to ensure continuous accessibility.
+    \item \textbf{Correctness:} All functionalities should perform as specified with minimal defects.
+    \item \textbf{Flexibility:} The platform should be designed to accommodate new features and integrations over time.
+    \item \textbf{Interoperability:} It must work with external systems without any tribulations.
+    \item \textbf{Maintainability:} The codebase and system architecture should facilitate easy maintenance and debugging.
+    \item \textbf{Portability:} The platform must be operable across various environments and devices.
+    \item \textbf{Reliability:} The system must consistently perform its intended functions under normal and peak loads.
+    \item \textbf{Reusability:} Components should be designed for reuse across different modules or future projects.
+    \item \textbf{Robustness:} The system must handle errors gracefully without significant downtime.
+    \item \textbf{Testability:} All components must be easily testable using automated testing frameworks.
+    \item \textbf{Usability:} The user interface should be intuitive with a low learning curve, ensuring a positive user experience.
+\end{itemize}
+
+\end{document}

@@ -3,44 +3,25 @@ import Layout from '../components/layout';
 const Lists = () => {
     return (
         <Layout>
-            <div className="flex items-center ">
-                <img src="/images/lists.png" alt="Home" className="w-14 h-14" />
-                <span className="font-bold text-lg">Lists</span>
+            <div className="flex items-center">
+                <img src="/images/lists.png" alt="Lists" className="w-14 h-14" />
+                <span className="font-bold text-lg text-white">Lists</span>
             </div>
-
-            <div className="mt-4 space-y-6">
-                {/* Saved Lists */}
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Saved Lists</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li>🔹 List 1</li>
-                        <li>🔹 List 2</li>
-                        <li>🔹 List 3</li>
-                    </ul>
+            
+            <div className="mt-6 p-6 bg-[#2A2A2A] rounded-lg border border-[#3a3a3a]">
+                <div className="flex items-center mb-4">
+                    <svg xmlns="http:
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h2 className="text-xl font-bold text-white">The Graph Integration Disabled</h2>
                 </div>
-
-                {/* Suggested Lists */}
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Trending Lists</h2>
-                    <ul className="mt-2 space-y-2">
-                        <li> List A</li>
-                        <li> List B</li>
-                        <li> List C</li>
-                    </ul>
-                </div>
-
-                {/* Create New List */}
-                <div className="p-4 bg-[#2A2A2A] rounded shadow">
-                    <h2 className="font-bold">Create a New List</h2>
-                    <input
-                        type="text"
-                        placeholder="List Name..."
-                        className="w-full bg-[#333] text-white p-2 rounded-md mt-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    />
-                    <button className="w-full bg-primary text-white py-2 rounded-md mt-2">
-                        Create List
-                    </button>
-                </div>
+                <p className="text-gray-300 mb-4">
+                    The Lists feature requires The Graph indexing service, which is currently disabled in this deployment.
+                    This page will be fully functional once The Graph integration is enabled.
+                </p>
+                <p className="text-gray-400 text-sm">
+                    Try using the Home page or Profile page which use direct blockchain calls for core functionality.
+                </p>
             </div>
         </Layout>
     );

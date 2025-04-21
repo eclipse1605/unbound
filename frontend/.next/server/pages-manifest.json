@@ -2,9 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/explore": "pages/explore.js",
-  "/notifications": "pages/notifications.js",
-  "/messages": "pages/messages.js",
-  "/lists": "pages/lists.js"
+  "/": "pages/index.js"
 }
