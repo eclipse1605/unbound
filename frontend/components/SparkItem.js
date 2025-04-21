@@ -27,6 +27,14 @@ export default function SparkItem({
   onAction,
   currentUser
 }) {
+  // Debug logging for props
+  console.log(`[SparkItem ${sparkId}] PROPS:`, { 
+    sparkId, 
+    author: typeof author === 'object' ? author.address : author, 
+    contentExcerpt: content?.substring(0, 20), 
+    mediaHash,
+    timestamp
+  });
   const [authorData, setAuthorData] = useState(null);
   const [displayContent, setDisplayContent] = useState('Loading content...');
   const [mediaUrl, setMediaUrl] = useState(null);
@@ -113,19 +121,36 @@ export default function SparkItem({
     
     // If we have media, get the IPFS URL with fallback
     const fetchMedia = async () => {
+      console.log(`[SparkItem ${sparkId}] Attempting to fetch media with mediaHash:`, mediaHash);
+      console.log(`[SparkItem ${sparkId}] mediaHash type:`, typeof mediaHash);
+      
       if (mediaHash && mediaHash !== "") {
         setIsMediaLoading(true);
         try {
+          console.log(`[SparkItem ${sparkId}] Processing valid mediaHash:`, mediaHash);
           const ipfsUrl = await getIpfsImageUrl(mediaHash);
+          console.log(`[SparkItem ${sparkId}] Resolved mediaUrl:`, ipfsUrl);
+          
+          // Try to access the URL directly to verify it's reachable
+          try {
+            const response = await fetch(ipfsUrl, { method: 'HEAD' });
+            console.log(`[SparkItem ${sparkId}] URL access test result:`, { status: response.status, ok: response.ok });
+          } catch (fetchError) {
+            console.error(`[SparkItem ${sparkId}] Failed to verify URL:`, fetchError);
+          }
           
           // Try to determine if it's an image or video (simplified approach)
           const isImage = !(/\.(mp4|mov|avi|wmv)$/i.test(mediaHash));
+          console.log(`[SparkItem ${sparkId}] Media type detection:`, { isImage });
+          
           setMediaUrl(ipfsUrl);
         } catch (error) {
-          console.error("Error loading media:", error);
+          console.error(`[SparkItem ${sparkId}] Error loading media:`, error);
         } finally {
           setIsMediaLoading(false);
         }
+      } else {
+        console.error(`[SparkItem ${sparkId}] No mediaHash provided for this spark.`, { mediaHashValue: mediaHash });
       }
     };
     
@@ -252,8 +277,9 @@ export default function SparkItem({
       
       console.log("Final spark ID to use:", parsedSparkId, typeof parsedSparkId);
       
-      // Create the rebound
-      const result = await createRebound(parsedSparkId, reboundComment);
+      // Create the rebound with proper parameters - now only needs sparkId and comment
+      console.log(`Creating rebound with: sparkId=${parsedSparkId}, comment=${reboundComment ? reboundComment.substring(0, 20) + '...' : 'empty'}`);
+      const result = await createRebound(parsedSparkId, reboundComment || 'No comment');
       
       if (result.success) {
         setReboundCount(prev => prev + 1);
@@ -349,31 +375,86 @@ export default function SparkItem({
                 src={mediaUrl} 
                 alt="Media content" 
                 className="rounded-md max-h-96 max-w-full"
+                onLoad={(e) => {
+                  console.log(`[SparkItem ${sparkId}] Image loaded successfully:`, { width: e.target.width, height: e.target.height });
+                }}
                 onError={(e) => {
-                  console.log("Media loading error");
+                  console.error(`[SparkItem ${sparkId}] Failed to load image at:`, mediaUrl);
+                  console.error(`[SparkItem ${sparkId}] Image error details:`, { 
+                    mediaHash, 
+                    sparkId,
+                    naturalWidth: e.target.naturalWidth,
+                    complete: e.target.complete
+                  });
                   e.target.style.display = 'none';
+                  // Show error message below
+                  const errorMsg = document.createElement('div');
+                  errorMsg.className = 'text-red-400 mt-2';
+                  errorMsg.innerText = 'Failed to load image from IPFS.';
+                  e.target.parentNode.appendChild(errorMsg);
                 }}
               />
+              <div className="text-xs text-gray-500 mt-1">{mediaUrl}</div>
             </div>
           )}
           
           <div className="flex items-center space-x-4 mt-3 text-gray-400">
-            <button 
+            <button
               onClick={handleLike}
               disabled={isLiking}
-              className={`flex items-center space-x-1 ${hasLiked ? 'text-red-500' : 'hover:text-gray-300'}`}
+              aria-label={hasLiked ? 'Unlike this spark' : 'Like this spark'}
+              className={`relative flex items-center space-x-1 group focus:outline-none transition-colors duration-200 ${hasLiked ? 'text-red-500' : 'hover:text-red-400 text-gray-400'}`}
+              tabIndex={0}
+              title={hasLiked ? 'Unlike' : 'Like'}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill={hasLiked ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-              <span>{likeCount}</span>
+              {/* Animated heart icon */}
+              <span className={`relative flex items-center justify-center`}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-7 w-7 transition-all duration-300 ${hasLiked ? 'scale-110 animate-like-pop' : 'scale-100 group-hover:scale-110'}`}
+                  fill={hasLiked ? "currentColor" : "none"}
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  style={{ filter: hasLiked ? 'drop-shadow(0 0 8px #ef4444aa)' : 'none' }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                {/* Spinner overlay when loading */}
+                {isLiking && (
+                  <span className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 rounded-full">
+                    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    </svg>
+                  </span>
+                )}
+                {/* Confetti effect for like */}
+                {hasLiked && !isLiking && (
+                  <span className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 animate-unlike-confetti">
+                    {/* Simple sparkle/confetti dots */}
+                    <span className="block w-2 h-2 bg-yellow-300 rounded-full opacity-70 absolute left-0 top-0 animate-ping"></span>
+                    <span className="block w-1.5 h-1.5 bg-pink-400 rounded-full opacity-60 absolute left-3 top-1 animate-ping"></span>
+                    <span className="block w-1 h-1 bg-blue-400 rounded-full opacity-70 absolute left-2 top-3 animate-ping"></span>
+                  </span>
+                )}
+              </span>
+              {/* Animated like count */}
+              <span className="ml-1 font-semibold transition-all duration-200 select-none" aria-live="polite">
+                {likeCount}
+              </span>
+              {/* Tooltip */}
+              <span className="absolute left-1/2 -translate-x-1/2 -bottom-7 px-2 py-1 rounded bg-black text-xs text-white opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200">
+                {hasLiked ? 'Unlike' : 'Like'}
+              </span>
             </button>
-            
-            <button 
+            <button
               onClick={() => setReboundModalOpen(true)}
-              className="flex items-center space-x-1 hover:text-gray-300"
+              aria-label="Rebound this spark"
+              className="relative flex items-center space-x-1 group focus:outline-none transition-colors duration-200 hover:text-gray-300 text-gray-400"
+              tabIndex={0}
+              title="Rebound"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
               </svg>
               <span>{reboundCount}</span>

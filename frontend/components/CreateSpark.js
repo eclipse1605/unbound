@@ -46,19 +46,33 @@ export default function CreateSpark({ onClose, onSuccess }) {
       let ipfsHash = "";
       if (mediaFile) {
         setStatus("Uploading media to IPFS...");
-        ipfsHash = await pinFileToIPFS(mediaFile);
+        try {
+          ipfsHash = await pinFileToIPFS(mediaFile);
+          if (!ipfsHash) {
+            setStatus("Failed to upload media to IPFS. Try again.");
+            setLoading(false);
+            return;
+          }
+        } catch (mediaErr) {
+          console.error("Failed to upload media to IPFS:", mediaErr);
+          setStatus("Error uploading media to IPFS: " + (mediaErr?.message || mediaErr));
+          setLoading(false);
+          return;
+        }
       }
+      console.log("[CreateSpark] Media hash:", ipfsHash);
 
       setStatus("Uploading spark to IPFS...");
       
       const contentIpfsHash = await pinJSONToIPFS({ content });
-      setStatus("Uploading spark to blockchain...");
+console.log("[CreateSpark] Content hash:", contentIpfsHash);
+setStatus("Uploading spark to blockchain...");
 
-      const contract = await getSparkRegistryContract();
-      console.log("Creating spark with content hash:", contentIpfsHash, "media hash:", ipfsHash);
+const contract = await getSparkRegistryContract();
+console.log("[CreateSpark] Creating spark with content hash:", contentIpfsHash, "media hash:", ipfsHash);
 
-      const tx = await contract.createSpark(contentIpfsHash, ipfsHash);
-      console.log("Transaction sent:", tx.hash);
+const tx = await contract.createSpark(contentIpfsHash, ipfsHash);
+console.log("Transaction sent:", tx.hash);
       
       await tx.wait();
       console.log("Transaction confirmed");

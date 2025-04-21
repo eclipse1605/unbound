@@ -27,43 +27,37 @@ export const getReboundManager = async (readOnly = false) => {
   }
 };
 
-export const createRebound = async (sparkId, contentHash, contentType) => {
+export const createRebound = async (sparkId, comment) => {
   try {
-    
-    if (!sparkId) {
+    // Check if sparkId is valid (can be 0, but not undefined/null)
+    if (sparkId === undefined || sparkId === null) {
       console.error('Spark ID is required to create a rebound');
       throw new Error('Spark ID is required');
     }
     
-    if (!contentHash || contentHash.trim() === '') {
-      console.error('Content hash is required to create a rebound');
-      throw new Error('Content hash is required');
+    // Additional debug logging to help troubleshoot
+    console.log(`createRebound called with sparkId: ${sparkId} (${typeof sparkId})`);
+    
+    // Validate comment
+    if (!comment || comment.trim() === '') {
+      console.warn('Empty comment for rebound, using default');
+      comment = 'No comment';
     }
 
-    console.log(`Creating rebound for sparkId: ${sparkId} with content: ${contentHash} (${contentType})`);
+    console.log(`Creating rebound for sparkId: ${sparkId} with comment: ${comment}`);
 
+    // Format the sparkId to handle various input types
     const formattedSparkId = typeof sparkId === 'string' ? sparkId : sparkId.toString();
 
-    try {
-      const sparkManager = await getSparkManager(true); 
-      const sparkExists = await sparkManager.exists(formattedSparkId);
-      if (!sparkExists) {
-        console.error(`Spark with ID ${sparkId} does not exist`);
-        throw new Error(`Cannot create rebound: Spark with ID ${sparkId} does not exist`);
-      }
-    } catch (sparkCheckError) {
-      console.error('Error checking if spark exists:', sparkCheckError);
-      
-      if (sparkCheckError.message.includes('does not exist')) {
-        throw sparkCheckError;
-      }
-    }
+    // Skip the exists check since it appears the contract doesn't have this method
+    // Instead, we'll let the contract handle the validation
     
     const reboundManager = await getReboundManager(false);
     
     console.log("Sending transaction to create rebound...");
     
-    const tx = await reboundManager.createRebound(formattedSparkId, contentHash, contentType);
+    // Based on the ABI, createRebound only takes two parameters: originalSparkId and comment
+    const tx = await reboundManager.createRebound(formattedSparkId, comment);
     console.log("Transaction sent:", tx.hash);
     
     console.log("Waiting for transaction confirmation...");
@@ -271,12 +265,16 @@ export const processReboundData = async (rawRebound, includeHasLiked = true) => 
       id: rawRebound.id.toString(),
       author: rawRebound.author,
       contentURI: rawRebound.contentURI,
+      mediaHash: rawRebound.contentURI, // Add mediaHash property mapping to contentURI
       parentType: rawRebound.parentType,
       parentId: rawRebound.parentId.toString(),
       timestamp: new Date(rawRebound.timestamp.toNumber() * 1000),
       likeCount: rawRebound.likeCount.toNumber(),
       isDeleted: rawRebound.isDeleted
     };
+    
+    // Debug logging to verify media hash
+    console.log(`Processing rebound ${processedRebound.id} with mediaHash: ${processedRebound.mediaHash}`);
     
     if (includeHasLiked) {
       processedRebound.hasLiked = await hasLikedRebound(processedRebound.id);

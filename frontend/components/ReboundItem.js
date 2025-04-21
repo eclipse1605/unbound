@@ -3,12 +3,14 @@ import { formatAddress, formatDate } from '../utils/format';
 import { getProfileData } from '../utils/profile';
 import { likeRebound, unlikeRebound, hasLikedRebound, deleteRebound } from '../utils/rebound';
 import { setupNetwork } from '../utils/ethereum';
+import { isIpfsHash, fetchIpfsContent, getIpfsImageUrl } from '../utils/ipfs';
 import Link from 'next/link';
 
 export default function ReboundItem({ 
   id,
   rebounder,
   content = "",
+  mediaHash = null,
   originalSparkId,
   timestamp = new Date(),
   likeCount: initialLikeCount = 0,
@@ -16,6 +18,13 @@ export default function ReboundItem({
   onAction,
   currentUser
 }) {
+  // Debug logging
+  console.log(`[ReboundItem ${id}] props:`, { 
+    id, 
+    rebounder: typeof rebounder === 'object' ? rebounder.address : rebounder, 
+    contentExcerpt: content?.substring(0, 20),
+    mediaHash
+  });
   const [author, setAuthor] = useState(null);
   const [hasLiked, setHasLiked] = useState(initialHasLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
@@ -23,6 +32,8 @@ export default function ReboundItem({
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [mediaUrl, setMediaUrl] = useState(null);
+  const [isMediaLoading, setIsMediaLoading] = useState(false);
   
   useEffect(() => {
     
@@ -54,6 +65,30 @@ export default function ReboundItem({
     
     fetchAuthor();
 
+    // If media hash is provided, fetch the media
+    const fetchMedia = async () => {
+      if (!mediaHash) return;
+      
+      try {
+        console.log(`Fetching media for rebound ${id} with hash:`, mediaHash);
+        setIsMediaLoading(true);
+        
+        if (isIpfsHash(mediaHash)) {
+          const imageUrl = getIpfsImageUrl(mediaHash);
+          console.log('IPFS image URL:', imageUrl);
+          setMediaUrl(imageUrl);
+        } else if (mediaHash.startsWith('http')) {
+          setMediaUrl(mediaHash);
+        }
+      } catch (error) {
+        console.error('Error fetching media for rebound:', error);
+      } finally {
+        setIsMediaLoading(false);
+      }
+    };
+    
+    fetchMedia();
+
     const checkIfLiked = async () => {
       if (!window.ethereum || !currentUser || !id) return;
       
@@ -68,7 +103,7 @@ export default function ReboundItem({
     if (window.ethereum && currentUser) {
       checkIfLiked();
     }
-  }, [rebounder, id, currentUser]);
+  }, [rebounder, id, currentUser, mediaHash]);
 
   const handleLike = async () => {
     if (isLiking || !window.ethereum || !currentUser) {
@@ -184,6 +219,26 @@ export default function ReboundItem({
           <p className="text-gray-300 mt-1 break-words whitespace-pre-wrap">
             {content}
           </p>
+          
+          {/* Display media content if available */}
+          {mediaUrl && (
+            <div className="mt-3 rounded-lg overflow-hidden bg-gray-800 relative">
+              <img
+                src={mediaUrl}
+                alt="Rebound media content"
+                className="w-full h-auto max-h-80 object-contain"
+                onError={(e) => {
+                  console.error('Failed to load image:', mediaUrl);
+                  e.target.style.display = 'none';
+                }}
+              />
+              {isMediaLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                </div>
+              )}
+            </div>
+          )}
           
           {originalSparkId && (
             <Link href={`/spark?id=${originalSparkId}`} className="text-xs text-[#9B7CFA] hover:underline mt-2 inline-block">

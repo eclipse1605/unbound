@@ -93,11 +93,21 @@ export async function fetchSparks(limit = 20, skip = 0) {
   
   const sparks = await Promise.all(sparkPromises);
 
-  return sparks
+  console.log("Raw sparks from contract:", JSON.stringify(sparks.map(s => ({ ...s }))));
+  
+  const formattedSparks = sparks
     .map((spark, index) => {
       if (spark.isDeleted) return null;
-      return {
-        
+      
+      console.log(`[directQueries] Processing spark #${indices[index]}:`, {
+        author: spark.author,
+        contentPreview: spark.content?.substring(0, 20),
+        mediaHash: spark.mediaHash,
+        mediaHashType: typeof spark.mediaHash,
+        hasMediaHash: !!spark.mediaHash
+      });
+      
+      const formatted = {
         id: indices[index],
         author: spark.author,
         content: spark.content,
@@ -107,9 +117,24 @@ export async function fetchSparks(limit = 20, skip = 0) {
         rebounds: Number(spark.rebounds),
         isDeleted: spark.isDeleted
       };
+      
+      console.log(`[directQueries] Formatted spark #${indices[index]}:`, {
+        mediaHash: formatted.mediaHash,
+        hasMediaHash: !!formatted.mediaHash
+      });
+      
+      return formatted;
     })
     .filter(s => s !== null)
-    .reverse(); 
+    .reverse();
+    
+  console.log("Final formatted sparks:", formattedSparks.map(s => ({ 
+    id: s.id, 
+    hasMediaHash: !!s.mediaHash,
+    mediaHash: s.mediaHash
+  })));
+  
+  return formattedSparks;
 }
 
 export async function fetchUserSparks(userAddress, limit = 20, skip = 0) {

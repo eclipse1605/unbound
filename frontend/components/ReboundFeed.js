@@ -176,15 +176,24 @@ export default function ReboundFeed({
       </div>
       
       <div className="space-y-4">
-        {rebounds.map((rebound) => (
-          <ReboundItem 
-            key={rebound.id} 
-            rebound={rebound} 
-            onRefresh={handleReboundAction} 
-            hasMetaMask={hasMetaMask}
-            userAddress={currentUserAddress}
-          />
-        ))}
+        {rebounds.map((rebound) => {
+          console.log('Rendering rebound with data:', rebound);
+          return (
+            <ReboundItem 
+              key={rebound.id}
+              id={rebound.id}
+              rebounder={rebound.author}
+              content={rebound.contentURI}
+              mediaHash={rebound.mediaHash}
+              originalSparkId={rebound.parentId}
+              timestamp={rebound.timestamp}
+              likeCount={rebound.likeCount}
+              hasLiked={rebound.hasLiked}
+              onAction={handleReboundAction}
+              currentUser={currentUserAddress}
+            />
+          );
+        })}
       </div>
     </div>
   );

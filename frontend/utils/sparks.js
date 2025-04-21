@@ -152,7 +152,7 @@ export const unlikeSpark = async (sparkId) => {
     }
 
     console.log("Sending unlike transaction...");
-    const tx = await sparkManager.unlike(formattedSparkId);
+    const tx = await sparkManager.unlikeSpark(formattedSparkId);
     console.log("Transaction sent:", tx.hash);
 
     console.log("Waiting for transaction confirmation...");
@@ -210,18 +210,28 @@ export const hasLikedSpark = async (sparkId, address) => {
 
 const processSparkData = async (sparkData, currentUserAddress) => {
   try {
-    const {
-      id,
-      author,
-      contentHash,
-      contentType,
-      timestamp,
-      parentId,
-      isDeleted,
-      likeCount,
-      responseCount
-    } = sparkData;
-
+    // Log the actual structure of sparkData to debug
+    console.log("[processSparkData] Raw sparkData:", JSON.stringify(sparkData));
+    
+    // The Solidity contract returns these fields in the Spark struct
+    // Map them correctly based on the contract's field names
+    const author = sparkData.author;
+    const content = sparkData.content;
+    const mediaHash = sparkData.mediaHash; // This is what we need
+    const timestamp = sparkData.timestamp;
+    const likes = sparkData.likes;
+    const rebounds = sparkData.rebounds;
+    const isDeleted = sparkData.isDeleted;
+    
+    // For backwards compatibility
+    const id = sparkData.id || '0';
+    const contentType = 'text';
+    const parentId = sparkData.parentId || '0';
+    const likeCount = likes;
+    const responseCount = rebounds;
+    
+    console.log("[processSparkData] Extracted mediaHash:", mediaHash);
+    
     const sparkId = id.toString();
 
     const authorProfile = await getProfileData(author);
@@ -229,13 +239,14 @@ const processSparkData = async (sparkData, currentUserAddress) => {
     const hasLiked = currentUserAddress ? 
       await hasLikedSpark(sparkId, currentUserAddress) : false;
 
-    let content = contentHash;
-    if (isIpfsHash(contentHash)) {
+    // Check if the content field is an IPFS hash and fetch it if needed
+    let displayContent = content;
+    if (isIpfsHash(content)) {
       try {
-        content = await fetchIpfsContent(contentHash);
+        displayContent = await fetchIpfsContent(content);
       } catch (error) {
         console.error(`Failed to fetch content for spark ${sparkId}:`, error);
-        content = 'Content unavailable';
+        displayContent = 'Content unavailable';
       }
     }
     
@@ -246,8 +257,9 @@ const processSparkData = async (sparkData, currentUserAddress) => {
         username: authorProfile.username,
         avatarUrl: authorProfile.avatarUrl
       },
-      content: content,
+      content: displayContent,
       contentType: contentType,
+      mediaHash: mediaHash, // <-- Pass mediaHash to frontend
       timestamp: new Date(parseInt(timestamp) * 1000),
       parentId: parentId.toString(),
       isDeleted: isDeleted,
@@ -266,12 +278,13 @@ const processSparkData = async (sparkData, currentUserAddress) => {
         avatarUrl: '/default-avatar.png'
       },
       content: 'Error loading content',
-      contentType: sparkData.contentType || 'text',
+      contentType: 'text',
+      mediaHash: sparkData.mediaHash || '', // <-- Add fallback for error case
       timestamp: sparkData.timestamp ? new Date(parseInt(sparkData.timestamp) * 1000) : new Date(),
       parentId: sparkData.parentId?.toString() || '0',
       isDeleted: sparkData.isDeleted || false,
-      likeCount: parseInt(sparkData.likeCount) || 0,
-      responseCount: parseInt(sparkData.responseCount) || 0,
+      likeCount: parseInt(sparkData.likes) || 0,
+      responseCount: parseInt(sparkData.rebounds) || 0,
       hasLiked: false
     };
   }

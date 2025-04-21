@@ -152,8 +152,14 @@ export default function SparkFeed() {
       )}
       
       <div className="space-y-4">
-        {content.map((item) => (
-          item.type === 'rebound' ? (
+        {content.map((item) => {
+          console.log("[SparkFeed] Rendering item:", { 
+            id: item.id, 
+            hasMediaHash: !!item.mediaHash,
+            mediaHash: item.mediaHash 
+          });
+          
+          return item.type === 'rebound' ? (
             <ReboundItem
               key={item.id}
               id={item.id}
@@ -170,14 +176,15 @@ export default function SparkFeed() {
               sparkId={item.id}
               author={item.author}
               content={item.content}
+              mediaHash={item.mediaHash} /* This prop was missing - the key fix */
               timestamp={new Date(item.timestamp * 1000)}
               likeCount={item.likes}
               responseCount={item.rebounds}
               onAction={handleSparkAction}
               currentUser={userAddress}
             />
-          )
-        ))}
+          );
+        })}
       </div>
     </div>
   );

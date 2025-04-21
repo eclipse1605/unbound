@@ -69,6 +69,15 @@ const Profile = () => {
 
                 const processedContent = await Promise.all(contentData.map(async (item) => {
                     try {
+                        // Debug the raw item format
+                        console.log(`Processing raw item with ID ${item.id}:`, item);
+                        
+                        // Fix for array-indexed data vs object properties
+                        // Check if we have numeric indices and assign them properly
+                        if (item[2] && typeof item[2] === 'string' && !item.mediaHash) {
+                            console.log(`[Profile] Found mediaHash at index 2: ${item[2]}, adding as mediaHash property`);
+                            item.mediaHash = item[2];
+                        }
                         
                         if (!item.content) {
                             item.content = "No content available";
@@ -91,6 +100,9 @@ const Profile = () => {
                                 item.content = "Error loading content from IPFS";
                             }
                         }
+                        
+                        // Ensure mediaHash is present after processing
+                        console.log(`[Profile] After processing, item ${item.id || 'unknown'} mediaHash:`, item.mediaHash);
                     } catch (error) {
                         console.error("Error processing item content:", error, item);
                         item.content = "Error processing content";
@@ -195,13 +207,30 @@ const Profile = () => {
         }
 
         console.log("Sparks to render:", sparks);
+    
+        // Debug: Check which sparks have mediaHash
+        sparks.forEach(spark => {
+            // Fix mediaHash if it's at index 2 but not in the mediaHash property
+            if (spark[2] && typeof spark[2] === 'string' && !spark.mediaHash) {
+                console.log(`[Profile] Adding missing mediaHash from index 2: ${spark[2]}`);
+                spark.mediaHash = spark[2];
+            }
+            
+            console.log(`[Profile] Spark ${spark.id} mediaHash:`, {
+                hasMediaHash: !!spark.mediaHash,
+                mediaHash: spark.mediaHash,
+                indexedData: spark[2]
+            });
+        });
 
         return (
             <div className="space-y-4">
                 {sparks.map((item) => {
                     console.log(`Rendering spark ${item.id}:`, item);
+                    // Create a unique key using type and id together
+                    const uniqueKey = `${item.type || 'spark'}-${item.id}`;
                     return (
-                    <div key={item.id} className="bg-[#2A2A2A] p-3 rounded-lg border border-gray-700 shadow-md">
+                    <div key={uniqueKey} className="bg-[#2A2A2A] p-3 rounded-lg border border-gray-700 shadow-md">
                         <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0">
                                 <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center overflow-hidden">
@@ -234,6 +263,29 @@ const Profile = () => {
                                         ? item.content 
                                         : "Content unavailable"}
                                 </div>
+                                
+                                {/* Display media if available */}
+                                {item.mediaHash && (
+                                    <div className="mt-3">
+                                        <img 
+                                            src={`https://gateway.pinata.cloud/ipfs/${item.mediaHash}`}
+                                            alt="Media content" 
+                                            className="rounded-md max-h-96 max-w-full"
+                                            onLoad={(e) => {
+                                                console.log(`[Profile] Image loaded successfully for spark ${item.id}`);
+                                            }}
+                                            onError={(e) => {
+                                                console.error(`[Profile] Failed to load image for spark ${item.id}:`, item.mediaHash);
+                                                e.target.style.display = 'none';
+                                                // Show error message below
+                                                const errorMsg = document.createElement('div');
+                                                errorMsg.className = 'text-red-400 mt-2 text-xs';
+                                                errorMsg.innerText = 'Failed to load image from IPFS.';
+                                                e.target.parentNode.appendChild(errorMsg);
+                                            }}
+                                        />
+                                    </div>
+                                )}
                                 
                                 {item.isRebound && item.originalSparkId && (
                                     <div className="text-xs text-[#9B7CFA] mt-1">
