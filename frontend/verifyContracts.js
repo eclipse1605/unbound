@@ -7,8 +7,8 @@ const sparkRegistryAbi = require("./abis/SparkRegistry.json").abi;
 async function main() {
   try {
     
-    console.log("Connecting to local blockchain at http:
-    const provider = new ethers.JsonRpcProvider("http:
+    console.log("Connecting to local blockchain at http://127.0.0.1:8545");
+    const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
 
     const network = await provider.getNetwork();
     console.log(`Connected to network: Chain ID ${network.chainId}`);

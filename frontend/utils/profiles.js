@@ -47,8 +47,8 @@ export const getProfileData = async (address) => {
     
     if (isIpfsHash(avatarUrl)) {
       try {
-        
-        processedAvatar = `https:
+        // For avatar, we just need the URL, not the content
+        processedAvatar = `https://ipfs.io/ipfs/${avatarUrl.replace('ipfs://', '')}`;
       } catch (error) {
         console.error('Failed to process avatar URL:', error);
         processedAvatar = '/default-avatar.png'; 

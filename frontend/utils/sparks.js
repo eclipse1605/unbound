@@ -99,7 +99,7 @@ export const likeSpark = async (sparkId) => {
     }
 
     console.log("Sending like transaction...");
-    const tx = await sparkManager.like(formattedSparkId);
+    const tx = await sparkManager.likeSpark(formattedSparkId);
     console.log("Transaction sent:", tx.hash);
 
     console.log("Waiting for transaction confirmation...");

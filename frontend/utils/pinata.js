@@ -12,7 +12,7 @@ function validatePinataConfig() {
 export async function pinJSONToIPFS(jsonBody) {
   validatePinataConfig();
   
-  const url = `https:
+  const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
   
   try {
     const res = await fetch(url, {
@@ -48,7 +48,7 @@ export async function pinJSONToIPFS(jsonBody) {
 export async function pinFileToIPFS(file) {
   validatePinataConfig();
   
-  const url = `https:
+  const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
   const formData = new FormData();
   formData.append('file', file);
   

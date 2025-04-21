@@ -35,9 +35,9 @@ console.log('Updated subgraph.yaml with contract addresses');
 
 let deployEndpoint;
 if (network === 'localhost') {
-  deployEndpoint = 'http:
+  deployEndpoint = 'http://127.0.0.1:8020';
 } else if (network === 'hosted-service') {
-  deployEndpoint = 'https:
+  deployEndpoint = 'https://api.thegraph.com/deploy/';
 } else {
   console.error(`Unknown network: ${network}`);
   process.exit(1);
@@ -69,7 +69,7 @@ try {
       console.log('Note: Subgraph might already exist, continuing with deployment');
     }
 
-    exec(`cd subgraph && graph deploy ${subgraphName} --ipfs http:
+    exec(`cd subgraph && graph deploy ${subgraphName} --ipfs http://localhost:5001 --node ${deployEndpoint}`, { stdio: 'inherit' });
   } else {
     
     exec(`cd subgraph && graph deploy --product hosted-service ${subgraphName}`, { stdio: 'inherit' });
@@ -86,12 +86,12 @@ try {
     if (network === 'localhost') {
       envContent = envContent.replace(
         /NEXT_PUBLIC_GRAPH_API=.*/,
-        `NEXT_PUBLIC_GRAPH_API=http:
+        `NEXT_PUBLIC_GRAPH_API=http://localhost:8000/subgraphs/name/${subgraphName}`
       );
     } else {
       envContent = envContent.replace(
         /NEXT_PUBLIC_GRAPH_API=.*/,
-        `NEXT_PUBLIC_GRAPH_API=https:
+        `NEXT_PUBLIC_GRAPH_API=https://api.thegraph.com/subgraphs/name/${subgraphName}`
       );
     }
     

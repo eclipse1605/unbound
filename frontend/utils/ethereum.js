@@ -20,7 +20,7 @@ export function getProvider() {
     return new ethers.BrowserProvider(window.ethereum);
   }
 
-  return new ethers.JsonRpcProvider('http:
+  return new ethers.JsonRpcProvider('http://127.0.0.1:8545');
 }
 
 export async function getProviderOrSigner(needSigner = false) {
@@ -117,7 +117,7 @@ export async function setupNetwork() {
               {
                 chainId: HARDHAT_CHAIN_ID,
                 chainName: 'Hardhat Node',
-                rpcUrls: ['http:
+                rpcUrls: ['http://127.0.0.1:8545'],
                 nativeCurrency: {
                   name: 'Ethereum',
                   symbol: 'ETH',
@@ -139,7 +139,7 @@ export async function setupNetwork() {
                 {
                   chainId: LOCALHOST_CHAIN_ID,
                   chainName: 'Localhost 8545',
-                  rpcUrls: ['http:
+                  rpcUrls: ['http://127.0.0.1:8545'],
                   nativeCurrency: {
                     name: 'Ethereum',
                     symbol: 'ETH',

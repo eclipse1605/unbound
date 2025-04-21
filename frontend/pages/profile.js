@@ -272,14 +272,14 @@ const Profile = () => {
                                             }
                                         }}
                                     >
-                                        <svg xmlns="http:
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                                         </svg>
                                         <span className="text-xs">{item.likes || 0}</span>
                                     </button>
                                     <Link href={`/spark/${item.id}`} passHref>
                                         <button className="text-gray-400 flex items-center space-x-1 hover:text-gray-300">
-                                            <svg xmlns="http:
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                                             </svg>
                                             <span className="text-xs">{item.rebounds || 0}</span>

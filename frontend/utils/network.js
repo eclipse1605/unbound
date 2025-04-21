@@ -35,7 +35,7 @@ export const setupNetwork = async () => {
                   symbol: 'ETH',
                   decimals: 18,
                 },
-                rpcUrls: ['http:
+                rpcUrls: ['http://127.0.0.1:8545'],
               },
             ],
           });

@@ -77,7 +77,7 @@ const Comment = ({ comment, onLike, onUnlike, onReply, onDelete, currentUser, ha
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <Avatar 
-              src={`https:
+              src={`https://avatars.dicebear.com/api/human/${comment.author}.svg`}
               alt={authorName} 
               sx={{ width: 24, height: 24, mr: 1 }}
             />
